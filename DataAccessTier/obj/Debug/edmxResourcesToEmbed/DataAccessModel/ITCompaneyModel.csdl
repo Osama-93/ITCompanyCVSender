@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Jordan_IT_Companies_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Industry" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Website" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="LinkedInUrl" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="ContactFormUrl" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="DateAdded" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="EmailsSents" Relationship="Self.FK__EmailsSen__Compa__3B75D760" FromRole="Companies" ToRole="EmailsSent" />
+    <Property Name="ContactName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="AltEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="AltNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="WhatsApp" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+    <Property Name="isActive" Type="Boolean" />
+    <Property Name="Country" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="sentDate" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="EmailsSent">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CompanyId" Type="Int32" Nullable="false" />
+    <Property Name="DateSent" Type="DateTime" Precision="3" />
+    <Property Name="Subject" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Response" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Company" Relationship="Self.FK__EmailsSen__Compa__3B75D760" FromRole="EmailsSent" ToRole="Companies" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK__EmailsSen__Compa__3B75D760">
+    <End Role="Companies" Type="Self.Company" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="EmailsSent" Type="Self.EmailsSent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Companies">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EmailsSent">
+        <PropertyRef Name="CompanyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Jordan_IT_Companies_DBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Companies" EntityType="Self.Company" />
+    <EntitySet Name="EmailsSents" EntityType="Self.EmailsSent" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK__EmailsSen__Compa__3B75D760" Association="Self.FK__EmailsSen__Compa__3B75D760">
+      <End Role="Companies" EntitySet="Companies" />
+      <End Role="EmailsSent" EntitySet="EmailsSents" />
+    </AssociationSet>
+    <EntitySet Name="Roles" EntityType="Jordan_IT_Companies_DBModel.Role" />
+    <EntitySet Name="Users" EntityType="Jordan_IT_Companies_DBModel.User" />
+    <AssociationSet Name="FK__Users__RoleId__5EBF139D" Association="Jordan_IT_Companies_DBModel.FK__Users__RoleId__5EBF139D">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+    <EntitySet Name="newsLetters" EntityType="Jordan_IT_Companies_DBModel.newsLetter" />
+    <AssociationSet Name="FK__newsLette__Users__6FE99F9F" Association="Jordan_IT_Companies_DBModel.FK__newsLette__Users__6FE99F9F">
+      <End Role="User" EntitySet="Users" />
+      <End Role="newsLetter" EntitySet="newsLetters" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Users" Relationship="Jordan_IT_Companies_DBModel.FK__Users__RoleId__5EBF139D" FromRole="Role" ToRole="User" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="RoleId" Type="Int32" />
+    <NavigationProperty Name="Role" Relationship="Jordan_IT_Companies_DBModel.FK__Users__RoleId__5EBF139D" FromRole="User" ToRole="Role" />
+    <NavigationProperty Name="newsLetters" Relationship="Jordan_IT_Companies_DBModel.FK__newsLette__Users__6FE99F9F" FromRole="User" ToRole="newsLetter" />
+  </EntityType>
+  <Association Name="FK__Users__RoleId__5EBF139D">
+    <End Type="Jordan_IT_Companies_DBModel.Role" Role="Role" Multiplicity="0..1" />
+    <End Type="Jordan_IT_Companies_DBModel.User" Role="User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="newsLetter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UsersId" Type="Int32" />
+    <NavigationProperty Name="User" Relationship="Jordan_IT_Companies_DBModel.FK__newsLette__Users__6FE99F9F" FromRole="newsLetter" ToRole="User" />
+  </EntityType>
+  <Association Name="FK__newsLette__Users__6FE99F9F">
+    <End Type="Jordan_IT_Companies_DBModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="Jordan_IT_Companies_DBModel.newsLetter" Role="newsLetter" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="newsLetter">
+        <PropertyRef Name="UsersId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

@@ -1,0 +1,143 @@
+﻿@model IEnumerable<ITCompanyCVSender.Models.CompanyVM>
+
+<tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Industry</td>
+            <td><a href="@item.Website" target="_blank">@item.Website</a></td>
+            <td>@item.Email</td>
+            <td>@item.PhoneNumber</td>
+            <td><a href="@item.LinkedInUrl" target="_blank">@item.LinkedInUrl</a></td>
+            <td>@item.City</td>
+            <td><a href="@item.ContactFormUrl" target="_blank">@item.ContactFormUrl</a></td>
+            <td>@item.Status</td>
+            <td>@item.ContactName</td>
+            <td>@item.AltEmail</td>
+            <td>@item.AltNumber</td>
+            <td><a href="https://wa.me/@(item.WhatsApp)" target="_blank">Send Message To: @item.WhatsApp</a></td>
+            <td>@item.Notes</td>
+            <td>@(item.DateAdded?.ToShortDateString())</td>
+            <td>@(item.UpdatedDate?.ToShortDateString())</td>
+            <td>@((item.isActive ?? false) ? "Yes" : "No")</td>
+            <td>
+                <div class="btn-group btn-group-sm">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-secondary" })
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-outline-info" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-danger", onclick = "return confirm('Are you sure?');" })
+                    @if ((item.isActive ?? false) && !string.IsNullOrWhiteSpace(item.Email))
+                    {
+                        <button class="btn btn-outline-primary sendEmailBtn" data-id="@item.Id" data-email="@item.Email" data-name="@item.Name">Send Email</button>
+                        <span class="email-status" id="status-@item.Id"></span>
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+</tbody>
+<script>
+     $(document).on('click', '.sendEmailBtn', function () {
+        var button = $(this);
+        var companyId = button.data('id');
+        var statusSpan = $('#status-' + companyId);
+
+        // Optional UX changes
+        button.prop('disabled', true).text('Sending...');
+        statusSpan.html('<span class="spinner-border spinner-border-sm text-primary"></span>');
+
+        $.ajax({
+            url: '@Url.Action("SendEmail", "Company")',
+            type: 'POST',
+            data: { id: companyId },
+            success: function (response) {
+                if (response.success) {
+                    statusSpan.html('<span class="text-success">Sent ✔</span>');
+                } else {
+                    statusSpan.html('<span class="text-danger">Failed ✖</span>');
+                }
+            },
+            error: function () {
+                statusSpan.html('<span class="text-danger">Error ✖</span>');
+            },
+            complete: function () {
+                button.prop('disabled', false).text('Send Email');
+            }
+        });
+    });
+
+    $('#findMissingEmailsBtn').click(function () {
+        $('#findMissingEmailsBtn').prop('disabled', true);
+        $('#findText').text('Finding...')
+        $('#findSpinner').removeClass('d-none');
+        $('#findStatus').html('');
+
+        $.ajax({
+            url: '@Url.Action("findMissingEmails", "Company")',
+            type: 'POST',
+            success: function (response) {
+                if (response.success) {
+                    $('#findStatus').html('<span class="text-success">' + response.message + '</span>');
+                } else {
+                    $('#findStatus').html('<span class="text-danger">' + response.message + '</span>');
+                }
+            },
+            error: function () {
+                $('#findStatus').html('<span class="text-danger">Error occurred while searching for emails.</span>');
+            },
+            complete: function () {
+                $('#findMissingEmailsBtn').prop('disabled', false);
+                $('#findText').text('Find Missing Emails');
+                $('#findSpinner').addClass('d-none');
+            }
+        });
+    })
+
+    $('#sendAllBtn').click(function () {
+        $('#sendAllBtn').prop('disabled', true);
+        $('#btnText').text('Sending...');
+        $('#loadingSpinner').removeClass('d-none');
+
+        $.ajax({
+            url: '@Url.Action("sendToAll", "Company")',
+            type: 'POST',
+            success: function (response) {
+                if (response.success) {
+                    $('#sendStatus').html('<span class="text-success">' + response.message + '</span>');
+                } else {
+                    $('#sendStatus').html('<span class="text-danger">Failed to send emails.</span>');
+                }
+            },
+            error: function () {
+                $('#sendStatus').html('<span class="text-danger">Error occurred while sending emails.</span>');
+            },
+            complete: function () {
+                // Re-enable the button
+                $('#sendAllBtn').prop('disabled', false);
+                $('#btnText').text('Send to All');
+                $('#loadingSpinner').addClass('d-none');
+            }
+        });
+    });
+
+   function reloadCompanyTable() {
+    // Destroy current DataTable if it exists
+    if ($.fn.DataTable.isDataTable('#companiesTable')) {
+        $('#companiesTable').DataTable().destroy();
+    }
+
+    // Load updated table body via AJAX
+    $.get('@Url.Action("LoadTable", "Company")', function (data) {
+        $('#companyTableBody').html(data); // Replace tbody
+
+        // Re-initialize DataTable
+        $('#companiesTable').DataTable({
+            responsive: true,
+            pageLength: 25
+        });
+    });
+}
+
+    }
+
+</script>

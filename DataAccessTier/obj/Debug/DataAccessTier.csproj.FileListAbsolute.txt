@@ -1,0 +1,12 @@
+D:\DotNet\ITCompanyCVSender\DataAccessTier\bin\Debug\DataAccessTier.dll.config
+D:\DotNet\ITCompanyCVSender\DataAccessTier\bin\Debug\DataAccessTier.dll
+D:\DotNet\ITCompanyCVSender\DataAccessTier\bin\Debug\DataAccessTier.pdb
+D:\DotNet\ITCompanyCVSender\DataAccessTier\bin\Debug\EntityFramework.dll
+D:\DotNet\ITCompanyCVSender\DataAccessTier\bin\Debug\EntityFramework.SqlServer.dll
+D:\DotNet\ITCompanyCVSender\DataAccessTier\bin\Debug\EntityFramework.xml
+D:\DotNet\ITCompanyCVSender\DataAccessTier\bin\Debug\EntityFramework.SqlServer.xml
+D:\DotNet\ITCompanyCVSender\DataAccessTier\obj\Debug\DataAccessTier.csproj.AssemblyReference.cache
+D:\DotNet\ITCompanyCVSender\DataAccessTier\obj\Debug\DataAccessTier.csproj.CoreCompileInputs.cache
+D:\DotNet\ITCompanyCVSender\DataAccessTier\obj\Debug\DataAccessTier.dll
+D:\DotNet\ITCompanyCVSender\DataAccessTier\obj\Debug\DataAccessTier.pdb
+D:\DotNet\ITCompanyCVSender\DataAccessTier\obj\Debug\DataAcce.1215171A.Up2Date

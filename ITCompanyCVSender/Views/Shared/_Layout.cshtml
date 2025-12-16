@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar bg-white border-bottom shadow-sm py-3">
+        <div class="container d-flex ">
+            <nav class="navbar bg-white border-bottom py-3 shadow-sm">
+                <div class="container text-center">
+                    <img src="~/Img/f7a2b614-9b48-4232-a6bd-946c44595912-removebg-preview.png" class="logo-header mb-1">
+                    <div class="header-tagline">Automated CV Emailing & Lead Finder</div>
+                </div>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year</p>
+        </footer>
+    </div>
+
+    @RenderSection("scripts", required: false)
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+</body>
+<!-- Email Preview Modal -->
+<div class="modal fade" id="emailPreviewModal" tabindex="-1" aria-labelledby="emailPreviewLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="emailPreviewLabel">Email Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>To:</strong> <span id="previewTo"></span></p>
+                <p><strong>Subject:</strong> <span id="previewSubject"></span></p>
+                <p><strong>Body:</strong></p>
+                <p id="previewBody">Dear Sir/Madam,<br>Please find my CV attached.<br>Regards,<br>Osama Elayan</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="confirmSendBtn" type="button" class="btn btn-primary">Send Email</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+   let selectedCompanyId = 0;
+
+    $(document).ready(function () {
+        // Initialize DataTable
+        $('#companiesTable').DataTable({
+            responsive: true,
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        });
+
+        // Send Email button click
+        $(document).on('click', '.sendEmailBtn', function () {
+            const button = $(this);
+            selectedCompanyId = button.data('id');
+            const email = button.data('email');
+            const name = button.data('name');
+
+            $('#previewTo').text(email);
+            $('#previewSubject').text(name);
+
+            const previewModal = new bootstrap.Modal(document.getElementById('emailPreviewModal'));
+            previewModal.show();
+        });
+
+        // Confirm send
+        $('#confirmSendBtn').click(function () {
+            const confirmBtn = $(this);
+            confirmBtn.prop('disabled', true).text('Sending...');
+
+            $.ajax({
+                url: '@Url.Action("SendEmail", "Company")',
+                type: 'POST',
+                data: { id: selectedCompanyId },
+                success: function (response) {
+                    if (response.success) {
+                        $('#emailPreviewModal').modal('hide');
+                        $('#status-' + selectedCompanyId).html('<span class="text-success">Sent ✔</span>');
+                    } else {
+                        $('#status-' + selectedCompanyId).html('<span class="text-danger">Failed ✖</span>');
+                    }
+                },
+                error: function () {
+                    $('#status-' + selectedCompanyId).html('<span class="text-danger">Error ✖</span>');
+                },
+                complete: function () {
+                    confirmBtn.prop('disabled', false).text('Send Email');
+                }
+            });
+        });
+    });
+</script>
+</html>
