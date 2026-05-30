@@ -1,4 +1,5 @@
-﻿using DataAccessTier.DataAccessController;
+﻿using BCrypt.Net;
+using DataAccessTier.DataAccessController;
 using DataAccessTier.DataAccessModel;
 using System;
 using System.Collections.Generic;
@@ -38,9 +39,18 @@ namespace Services
         public bool ValidateUser(string email, string password)
         {
             var user = dataAccess.Get(email);
-            if (user == null) return false;
+            if (user == null)
+                return false;
             bool result = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
             return result;
+        }
+        public User GetUserIfValid(string email, string password) 
+        {
+            var user = dataAccess.Get(email);
+            if(user == null)
+                return null;
+
+            return BCrypt.Net.BCrypt.Verify(password,user.PasswordHash)? user : null;
         }
     }
 }

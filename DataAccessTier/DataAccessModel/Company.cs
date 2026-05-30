@@ -40,8 +40,10 @@ namespace DataAccessTier.DataAccessModel
         public Nullable<bool> isActive { get; set; }
         public string Country { get; set; }
         public Nullable<System.DateTime> sentDate { get; set; }
+        public Nullable<int> UserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EmailsSent> EmailsSents { get; set; }
+        public virtual User User { get; set; }
     }
 }

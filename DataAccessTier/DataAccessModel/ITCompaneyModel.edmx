@@ -29,6 +29,7 @@
           <Property Name="isActive" Type="bit" />
           <Property Name="Country" Type="nvarchar(max)" />
           <Property Name="sentDate" Type="date" />
+          <Property Name="UserId" Type="int" />
         </EntityType>
         <EntityType Name="EmailsSent">
           <Key>
@@ -116,6 +117,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Companies_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Companies" Type="Self.Companies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Companies">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Jordan_IT_Companies_DBModelStoreContainer">
           <EntitySet Name="Companies" EntityType="Self.Companies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmailsSent" EntityType="Self.EmailsSent" Schema="dbo" store:Type="Tables" />
@@ -134,6 +147,10 @@
           <AssociationSet Name="FK__Users__RoleId__5EBF139D" Association="Self.FK__Users__RoleId__5EBF139D">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Companies_Users" Association="Self.FK_Companies_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Companies" EntitySet="Companies" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -165,6 +182,8 @@
           <Property Name="isActive" Type="Boolean" />
           <Property Name="Country" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="sentDate" Type="DateTime" Precision="0" />
+          <Property Name="UserId" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="Jordan_IT_Companies_DBModel.FK_Companies_Users" FromRole="Company" ToRole="User" />
         </EntityType>
         <EntityType Name="EmailsSent">
           <Key>
@@ -221,6 +240,10 @@
             <End Role="User" EntitySet="Users" />
             <End Role="newsLetter" EntitySet="newsLetters" />
           </AssociationSet>
+          <AssociationSet Name="FK_Companies_Users" Association="Jordan_IT_Companies_DBModel.FK_Companies_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Company" EntitySet="Companies" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Role">
           <Key>
@@ -242,6 +265,7 @@
           <Property Name="RoleId" Type="Int32" />
           <NavigationProperty Name="Role" Relationship="Jordan_IT_Companies_DBModel.FK__Users__RoleId__5EBF139D" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="newsLetters" Relationship="Jordan_IT_Companies_DBModel.FK__newsLette__Users__6FE99F9F" FromRole="User" ToRole="newsLetter" />
+          <NavigationProperty Name="Companies" Relationship="Jordan_IT_Companies_DBModel.FK_Companies_Users" FromRole="User" ToRole="Company" />
         </EntityType>
         <Association Name="FK__Users__RoleId__5EBF139D">
           <End Type="Jordan_IT_Companies_DBModel.Role" Role="Role" Multiplicity="0..1" />
@@ -277,6 +301,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Companies_Users">
+          <End Type="Jordan_IT_Companies_DBModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="Jordan_IT_Companies_DBModel.Company" Role="Company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Company">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -286,6 +322,7 @@
           <EntitySetMapping Name="Companies">
             <EntityTypeMapping TypeName="Jordan_IT_Companies_DBModel.Company">
               <MappingFragment StoreEntitySet="Companies">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="sentDate" ColumnName="sentDate" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />

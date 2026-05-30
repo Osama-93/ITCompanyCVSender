@@ -1,0 +1,19 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build folders
+bin/
+obj/
+
+# NuGet packages
+packages/
+
+# Cache
+*.cache
+
+# Build artifacts
+*.dll
+*.pdb
+*.exe

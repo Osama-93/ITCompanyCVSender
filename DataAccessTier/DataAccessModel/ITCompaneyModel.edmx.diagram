@@ -7,13 +7,14 @@
       <Diagram DiagramId="61fe51e51f2141d68d5c4c1d76e276cf" Name="Diagram1" ZoomLevel="66">
         <EntityTypeShape EntityType="Jordan_IT_Companies_DBModel.Company" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="Jordan_IT_Companies_DBModel.EmailsSent" Width="1.5" PointX="2.875" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="Jordan_IT_Companies_DBModel.sysdiagram" Width="1.5" PointX="5.5" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Jordan_IT_Companies_DBModel.sysdiagram" Width="1.5" PointX="7.5" PointY="4.25" IsExpanded="true" />
         <AssociationConnector Association="Jordan_IT_Companies_DBModel.FK__EmailsSen__Compa__3B75D760" ManuallyRouted="false" />
         <EntityTypeShape EntityType="Jordan_IT_Companies_DBModel.Role" Width="1.5" PointX="5.375" PointY="1.375" />
         <EntityTypeShape EntityType="Jordan_IT_Companies_DBModel.User" Width="1.5" PointX="7.625" PointY="1" />
         <AssociationConnector Association="Jordan_IT_Companies_DBModel.FK__Users__RoleId__5EBF139D" />
         <EntityTypeShape EntityType="Jordan_IT_Companies_DBModel.newsLetter" Width="1.5" PointX="9.875" PointY="1.25" />
         <AssociationConnector Association="Jordan_IT_Companies_DBModel.FK__newsLette__Users__6FE99F9F" />
+        <AssociationConnector Association="Jordan_IT_Companies_DBModel.FK_Companies_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
